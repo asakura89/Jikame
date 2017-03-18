@@ -3,9 +3,11 @@
     <Metadata>
         <Identity Id="c8deb4af-8736-4b05-b0e6-55d4713407cd" Version="1.0.2017.0117" Language="en-US" Publisher="asakura89" />
         <DisplayName>Jikame</DisplayName>
-        <Description xml:space="preserve">Display time in Visual Studio status bar</Description>
-        <Icon>Resources\JikamePackage.ico</Icon>
-        <Tags>time, info, information</Tags>
+        <Description xml:space="preserve">Display time in Visual Studio status bar.</Description>
+        <MoreInfo>https://github.com/asakura89/Jikame</MoreInfo>
+        <Icon>Resources\Jikame.ico</Icon>
+        <PreviewImage>Jikame.png</PreviewImage>
+        <Tags>time, info, information, status bar</Tags>
     </Metadata>
     <Installation InstalledByMsi="false">
         <InstallationTarget Version="[12.0]" Id="Microsoft.VisualStudio.Community" />

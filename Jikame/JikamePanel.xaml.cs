@@ -6,7 +6,6 @@ namespace Jikame {
     /// Interaction logic for JikamePanel.xaml
     /// </summary>
     public partial class JikamePanel : UserControl {
-        public const String DefaultFormat = "hh:mm:ss tt";
         private String format;
         private DateTime time;
 
@@ -24,20 +23,18 @@ namespace Jikame {
             }
         }
 
-        public JikamePanel() : this(DefaultFormat) {}
-
         public JikamePanel(String format) {
             InitializeComponent();
-            UpdateTime();
+            Format = format;
         }
 
         private void UpdateTime() {
-            String timeStr = time.ToString(DefaultFormat);
+            String timeStr;
             try {
                 timeStr = time.ToString(format);
             }
             catch (Exception) {
-                timeStr = time.ToString(DefaultFormat);
+                timeStr = time.ToString(Constant.DefaultFormat);
             }
             txtTime.Text = timeStr;
         }

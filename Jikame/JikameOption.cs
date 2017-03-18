@@ -19,5 +19,9 @@ namespace Jikame {
                 package?.UpdateFormatInstantly(value);
             }
         }
+
+        public JikameOption() {
+            if (String.IsNullOrEmpty(format)) format = Constant.DefaultFormat;
+        }
     }
 }

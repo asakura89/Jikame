@@ -10,11 +10,9 @@ using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using DiagProcess = System.Diagnostics.Process;
 
 namespace Jikame {
     /// <summary>
@@ -35,8 +33,8 @@ namespace Jikame {
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
-    [Guid(JikamePackage.PackageGuidString)]
+    [InstalledProductRegistration("#110", "#112", "1.0.2017.0117", IconResourceID = 400)] // Info on this package for Help/About
+    [Guid(PackageGuidString)]
     [ProvideOptionPage(typeof(JikameOption), "Jikame", "General", 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
@@ -49,20 +47,9 @@ namespace Jikame {
         public const string PackageGuidString = "497f856e-7fdc-4c28-b86a-c081c050bacb";
         
         private DTEEvents events;
-        private DiagProcess process;
         private JikameOption option;
         private JikamePanel jikame;
         private Timer timer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JikamePackage"/> class.
-        /// </summary>
-        public JikamePackage() {
-            // Inside this method you can place any initialization code that does not require
-            // any Visual Studio service because at this point the package object is created but
-            // not sited yet inside Visual Studio environment. The place to do all the other
-            // initialization is the Initialize method.
-        }
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -85,11 +72,8 @@ namespace Jikame {
             timer = new Timer(1000);
             timer.Elapsed += TimerOnElapsed;
 
-            process = DiagProcess.GetCurrentProcess();
             option = GetDialogPage(typeof(JikameOption)) as JikameOption;
-            String format = option?.Format;
-
-            jikame = new JikamePanel(format);
+            jikame = new JikamePanel(option?.Format);
             ForcefullyPlaceIntoStatusBar(jikame);
 
             timer.Enabled = true;
@@ -102,13 +86,12 @@ namespace Jikame {
         private void ForcefullyPlaceIntoStatusBar(FrameworkElement toBePlaced) {
             var vsWindow = Application.Current.MainWindow;
             var statusBar = vsWindow.Find("StatusBarPanel") as DockPanel;
-            var isPlaced = (statusBar.Find(toBePlaced.Name) as FrameworkElement) != null;
-            if (isPlaced) {
-                statusBar.Dispatcher.Invoke(() => {
-                    toBePlaced.SetValue(DockPanel.DockProperty, Dock.Right);
-                    statusBar.Children.Insert(1, toBePlaced);
-                });
-            }
+            var found = statusBar.Find(toBePlaced.Name) as UIElement;
+            if (found != null) statusBar?.Children.Remove(found);
+            statusBar?.Dispatcher.Invoke(() => {
+                toBePlaced.SetValue(DockPanel.DockProperty, Dock.Right);
+                statusBar.Children.Insert(1, toBePlaced);
+            });
         }
 
         public void UpdateFormatInstantly(String format) {
